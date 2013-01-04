@@ -175,4 +175,31 @@ JS.ENV.VectorSpec = JS.Test.describe("Vector", function() { with(this) {
     assert( $V([12,1]).rotate(Math.PI/2, [5,1]).eql([5,8]) )
     assert( Vector.i.rotate(-Math.PI/2, Sylvester.Line.create([10, 0, 100], Vector.k)).eql([10,9,0]) )
   }})
+
+  /** statistics methods */
+  test('range', function() { with(this) {
+    assertEqual( $V([-1,10,20]).range(), [-1,20])
+    assertEqual( $V([10,20,-10]).range(), [-10,20])
+  }})
+
+  test('sum', function() { with(this) {
+    assertEqual( $V([10,-1,20]).sum(),29)
+    assertEqual( $V([10,0]).toUnitVector().sum(), 1)
+  }})
+
+  test('mean', function() { with(this) {
+    assertEqual( $V([0,5,10,15,20,25]).mean(), 12.5)
+  }})
+
+  test('standard_deviation', function() { with(this) {
+    assertEqual( $V([1,2,3,4,5]).standard_deviation(), Math.sqrt(2.5))
+    assertEqual( $V([1,2,3,4,5]).variance(),2.5)
+
+  }})
+
+  test('variance', function() { with(this) {
+    assertEqual( $V([5,10,15,20,25]).variance(), 62.5)
+    assertEqual( $V([5,10,15,20,25]).standard_deviation(), Math.sqrt(62.5))
+  }})
+
 }})

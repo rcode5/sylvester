@@ -249,9 +249,57 @@ Sylvester.Vector.prototype = {
   },
 
   setElements: function(els) {
+    this._clearStats();
     this.elements = (els.elements || els).slice();
     return this;
+  },
+
+  /** statistics methods */
+  range: function() {
+    return [Math.min.apply(null, this.elements), Math.max.apply(null,this.elements)];
+  },
+
+  sum: function() {
+    var v = this.elements;
+    var i = 0, n = v.length;
+    var sum = 0;
+    for(;i<n;++i) {
+      sum += v[i];
+    }
+    return sum;
+  },
+
+  mean: function() {
+    return this._computeStats().mean;
+  },
+    
+  standard_deviation: function() {
+    return this._computeStats().deviation;
+  },
+
+  variance: function() {
+    return this._computeStats().variance;
+  },
+
+  _clearStats: function() {
+    this.statistics = null;
+  },
+
+  _computeStats: function() {  
+    /** memoize this data in statistics so we can be efficient with computation */
+    if (!this.statistics) {
+      // algorithm code from https://gist.github.com/1648603
+      var v = this.elements;
+      var r = {mean: 0, variance: 0, deviation: 0}, t = v.length;
+      for(var m, s = 0, l = t; l--; s += v[l]);
+      for(m = r.mean = s / t, l = t, s = 0; l--; s += Math.pow(v[l] - m, 2));
+      --t;
+      r.deviation = Math.sqrt(r.variance = s / t);
+      this.statistics = r;
+    }
+    return this.statistics;
   }
+
 };
 
 Sylvester.Vector.prototype.x = Sylvester.Vector.prototype.multiply;
